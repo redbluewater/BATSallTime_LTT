@@ -10,7 +10,8 @@ function [ Xfilt, bias ] = smooth_fluor(CTD, filt_width )
  
  igood = find(CTD.Pressure > 0 & CTD.Fluor > -990 & ~isnan(CTD.Fluor) & ~isnan(CTD.Pressure));
  if length(igood) < 10
-     disp('Not enough points to filter Fluor profile')
+     %turn off warning - KL reducing number of messages
+     %disp('Not enough points to filter Fluor profile')
      return
  end
  pvec = CTD.Pressure(igood);

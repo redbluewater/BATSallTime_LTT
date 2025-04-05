@@ -1,5 +1,5 @@
-function [theCode] = label_seasons_ctd(CTD,trans_dates )
-% function [theCode] = add_seasons(CTD,trans_dates )
+function [theCode] = label_seasons_ctd(CTD,trans_dates)
+% function [theCode] = add_seasons(CTD,trans_dates)
 %   Assigns a season code based dates listed in trans_dates
 %INPUT
 % CTD : struct containing a single BIOSSCOPE CTD cast 

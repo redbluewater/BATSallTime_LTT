@@ -1,5 +1,5 @@
-function Xout = calculate_BATSderivedVariables(infile, do_plots, outdir,giveNotice)
-% function Xout = calculate_BATSderivedVariables(infile, do_plots, outdir,giveNotice)
+function Xout = calculate_BATSderivedVariables_forLTT(infile,trans_dates,do_plots,outdir,giveNotice)
+% function Xout = calculate_BATSderivedVariables_forLTT(infile,trans_dates,do_plots,outdir,giveNotice)
 % Reads a *mat file (from BATS group), creates a structure with added 
 % fields, and writes a .csv file for each individual cruise. 
 % INPUT:
@@ -253,7 +253,7 @@ for ii = 1:ncast
        if max(ibad) < 5
            Xout.sa(ibad,ii) = Xout.sa(max(ibad)+1,ii);
            CTD.Salt(indx)= Xout.sa(1:nz,ii);
-           disp('Replaced missing salts at top of cast')
+           %disp('Replaced missing salts at top of cast') %turn off warnings
        end
    end
     % compute derived variables
@@ -405,7 +405,7 @@ if do_plots
     plot(xlim(),[DCM.de_bot,DCM.de_bot],'--k','Linewidth',1)  
     plot(xlim(),[ML_ToUse,ML_ToUse],'--m','Linewidth',1)
 end
-if isnan(DCM.itop)
+if isnan(DCM.itop) & giveNotice
        disp('top of DCM within ML')
 end
     
@@ -467,11 +467,10 @@ clear din parin
    Xout.vertZone(ibad,ii) = NaN;  
    
 % Label Seasons
-%KL change here - need year to calculate the season information that will
-%be used here
-   trans_dates = get_season_dates(Xout.year); %new function from KL
-
-   theCode = label_seasons_ctd_Ruth_v0(XX,DCM,ML_ToUse,trans_dates);
+%KL April 2025: use Excel file from July 2024 with season information
+%send it into this function so I am not opening file for each CTD cast
+   %trans_dates = get_season_dates(Xout.year); %new function from KL
+   theCode = label_seasons_ctd(XX,trans_dates); %send in trans_dates
    disp([num2str(Xout.year(ii)),' ',num2str(Xout.month(ii)),' ',num2str(Xout.day(ii)),'  Season: ', num2str(theCode)]);
    XX.Season(:) = theCode;
    CTD.Season(indx) = theCode;
@@ -503,28 +502,29 @@ clear din parin
   
 end % for ii
 
-   fmt = 'CRU_%1d%04d_ctd.csv';
-   outfile = sprintf(fmt,Xout.type(1),CTD.Cruise(1));
-   %stick in the directory I want
-   outfile = strcat(outdir,outfile);
-   %disp(['Writing ',outfile]);
-   
-   % replace any NaNs in CTD struct with -999.
-   flist = fieldnames(CTD);
-   nfields = length(flist);
-   for jj=1:nfields
-       CC=CTD.(fname);
-       CC(isnan(CC)) = -999;
-       CTD.(fname) = CC;
+   if 0 
+       %don't think I need the CSV files for the LTT project
+       fmt = 'CRU_%1d%04d_ctd.csv';
+       outfile = sprintf(fmt,Xout.type(1),CTD.Cruise(1));
+       %stick in the directory I want
+       outfile = strcat(outdir,outfile);
+       
+       % replace any NaNs in CTD struct with -999.
+       flist = fieldnames(CTD);
+       nfields = length(flist);
+       for jj=1:nfields
+           CC=CTD.(fname);
+           CC(isnan(CC)) = -999;
+           CTD.(fname) = CC;
+       end
+       TTcruise = struct2table(CTD);
+       writetable(TTcruise,outfile);
    end
-   TTcruise = struct2table(CTD);
-   writetable(TTcruise,outfile);
    
     if do_plots
         tilefigs
         reply = input(' Press ENTER to close figures....');
         close all
     end
-%
-%disp('Done!');
+
 end %function

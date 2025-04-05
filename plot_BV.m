@@ -62,6 +62,8 @@ z(k)= [];
         set(gcf,'paperpositionmode','auto')
         set(gcf,'renderer','Painters')
         print(gcf,'BATS_bv_allYears.svg','-dpdf')   
+    elseif 1 
+        saveas(gcf,'BATS_bvfrq_allYears.jpg')
     end
 
 

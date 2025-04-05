@@ -24,7 +24,7 @@ function [DCM] = get_dcm_layer_ctd(CHL, DE, MLD, percent, izmax)
 %
 % Ruth Curry, BIOS / ASU
 % Uploaded for BIOS-SCOPE project 19 October 2023
-% Krista Longnecker 2 July 2024 (saved Ruth's version as get_dcm_layer_ctd_Ruth_v0.m)
+% Krista Longnecker 2 July 2024 
 % adding a flag if the top or bottom of the DCM is in the ML, but change to 
 % keeping the actual DCM value; also do not set DCM to MLD depth...use
 % logic later to track this
@@ -50,7 +50,8 @@ for ii = 1:nprof
     profdepth = max(DE(:,ii));
     if ~isnan(idcm)
         if profdepth < 100 || profdepth == DE(idcm,ii)
-            disp('Profile too shallow to evaluate DCM');
+            %turn off warnings, too many messages!
+            %disp('Profile too shallow to evaluate DCM');
             continue
         end
         
