@@ -111,11 +111,12 @@ clear a dirlist
 
 %now have many rows of data, save this (after some housecleaning)
 cd(gitdir)
-clear outdir rootdir workdir gitdir stepOne 
 
 %export this as a CSV file...that will be better to share then the MATLAB
-%file
-writetable(allData,'BATS_CTDdata_2db.2025.04.04.csv')
+%file; file is big, do not put in gitdir (or setup .gitignore file)
+%writetable(allData,strcat(outdir,'BATS_CTDdata_2db.2025.04.04.csv'))
+
+clear outdir rootdir workdir gitdir stepOne 
 
 save(NameOfFile)
 
