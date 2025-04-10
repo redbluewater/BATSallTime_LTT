@@ -8,6 +8,10 @@ load BATSdataForBVplots.2025.04.04.mat
 
 %Craig's calculation from the synoptic cast
 T = readtable('Brunt-V_is_l__Frequency_Data_2.xlsx');
+%set rows from Craig's data where BV ==0 to NaN (calculation issue)
+k = find(T.N_squared==0);
+T.N_squared(k) = NaN;
+clear k
 
 %KL 4/9/2025
 %following Ruth - change negative values to a small number and then plot as
@@ -36,23 +40,26 @@ y(k) = [];
 x(k) =[];
 z(k)= [];
 
-    forMax = max(z);
-    useC = [min(z) forMax]; 
-    doPlot(x,y,z,useC)
+forMax = max(z);
+useC = [min(z) forMax]; 
+doPlot(x,y,z,useC)
 
-    xlabel('time')
-    ylabel('depth (m)')
-    title('BV frequency calculated from all BATS data using 2db resolution CTD cast data')
-    h = colorbar()
+xlabel('time')
+ylabel('depth (m)')
+title('BV frequency calculated from all BATS data using 2db resolution CTD cast data')
+h = colorbar();
 
-%% plot up Craig's data
+
+%%plot up Craig's data
+%%plot up Craig's data
+%%plot up Craig's data
+%%plot up Craig's data
 subplot(212)
 
 x = T.decy;
 y = T.Depth_m_; 
 % z = T.N_squared;
 z = power(log10(T.N_squared),10);
-
 
 k = find(y==-999);
 y(k) = [];
@@ -64,23 +71,27 @@ y(k) = [];
 x(k) =[];
 z(k)= [];
 
-    doPlot(x,y,z,useC)
+forMax = max(z);
+useC = [min(z) forMax];     
+doPlot(x,y,z,useC)
 
-    xlabel('time')
-    ylabel('depth (m)')
-    title('Carlson BV freq')
-    h = colorbar()
+xlabel('time')
+ylabel('depth (m)')
+title('Carlson BV freq')
+h = colorbar()
+
+title_up('Colors are BV as ''power(log10(BV),10)''')
 
 
-    if 0
-        %saveas(gcf,char(strcat(nDir,filesep,mtabNames(a),'.jpg')),'jpg')
-        %if I don't do the first bit, I don't get vectors for Illustrator
-        set(gcf,'paperpositionmode','auto')
-        set(gcf,'renderer','Painters')
-        print(gcf,'BATS_bv_allYears.svg','-dpdf')   
-    elseif 1 
-        saveas(gcf,'BATS_bvfrq_allYears.jpg')
-    end
+if 0
+    %saveas(gcf,char(strcat(nDir,filesep,mtabNames(a),'.jpg')),'jpg')
+    %if I don't do the first bit, I don't get vectors for Illustrator
+    set(gcf,'paperpositionmode','auto')
+    set(gcf,'renderer','Painters')
+    print(gcf,'BATS_bv_allYears.svg','-dpdf')   
+elseif 1 
+    saveas(gcf,'BATS_bvfrq_allYears.jpg')
+end
 
 
 
