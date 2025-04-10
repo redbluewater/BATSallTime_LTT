@@ -78,13 +78,13 @@ clear a
 
 % plot(T.BV_KL,T.N_squared,'.')
 % gscatter(T.BV_KL, T.BV_CC, T.BV_KL_count,[],[],20)
-plot(T.BV_KL, T.BV_CC,'.')
-hold on
-xlabel('BV from KL, filtered with Ruth''s code')
-ylabel('BV from Craig')
-title('Values at 10^2^0 are negative BV (unstable, converted to fixed value)')
-set(gca,'yscale','log')
-set(gca,'xscale','log')
+% plot(T.BV_KL, T.BV_CC,'.')
+% hold on
+% xlabel('BV from KL, filtered with Ruth''s code')
+% ylabel('BV from Craig')
+% title('Values at 10^2^0 are negative BV (unstable, converted to fixed value)')
+% set(gca,'yscale','log')
+% set(gca,'xscale','log')
 
 figure
 colordots2([T.BV_KL, T.BV_CC,T.Depth_m_],20,1,'parula')
