@@ -27,6 +27,12 @@ close all
 
 load workingBV.2025.04.09.mat
 
+small = 10^-100;
+k = find(T.N_squared<0);
+T.N_squared(k) = small;
+k = find(allData.bvfrq<0);
+allData.bvfrq(k) = small;
+
 for a = 1:size(T,1)
     if rem(a,1000)==1 
         fprintf('iteration %d for %d peaks\n',a,size(T,1)) 
@@ -52,14 +58,17 @@ end
 clear a
 
 % plot(T.BV_KL,T.N_squared,'.')
-gscatter(T.BV_KL,T.BV_CC,T.BV_KL_count,[],[],20)
+% gscatter(T.BV_KL, T.BV_CC, T.BV_KL_count,[],[],20)
+plot(T.BV_KL, T.BV_CC,'.')
 hold on
-YL = ylim;
-line(xlim,xlim,'color','k')
-ylim(YL)
+% YL = ylim;
+% line(xlim,xlim,'color','k')
+% ylim(YL)
 xlabel('BV from KL')
 ylabel('BV from Craig')
-title('Color is the number of casts averaged in KL calculations')
+% title('Color is the number of casts averaged in KL calculations')
+set(gca,'yscale','log')
+set(gca,'xscale','log')
 
    % 
    % if ~isempty(ks)

@@ -22,6 +22,7 @@ function Xout = calculate_BATSderivedVariables_forLTT(infile,trans_dates,do_plot
 % Original script from Ruth Curry BIOS/ASU (2023); Krista Longnecker
 % editing to add more MLD definitions 24 June 2024
 % KL using this to get BV values for LTT paper; 4 April 2025
+%KL added filter to BV data; 10 April 2025
 
 %%  Read file into rectangular array, and store each column as a field in structure CTD
 %KL version, read in the MATLAB file and then convert to match the legacy format
@@ -110,6 +111,7 @@ CTD.Fluor_offset = zeros(size(ZZ));
 CTD.sig_theta = sw_pden(CTD.Salt,CTD.Temp,CTD.Pressure,0) - 1000;
 CTD.AOU = aou(CTD.Salt,CTD.Temp,CTD.O2);
 CTD.bvfrq = ZZ;
+CTD.bvfilt = ZZ; %KL added 4/10/2025
 CTD.Sunrise = ZZ;
 CTD.Sunset = ZZ;
 CTD.Season = ZZ;
@@ -196,6 +198,7 @@ Xout.th = XX;
 Xout.sig0 = XX;
 Xout.rho = XX;
 Xout.bvfrq = XX;
+Xout.bvfilt = XX; %KL added 4/10/2025
 Xout.vertZone = XX;
 clear XX
 
@@ -268,6 +271,10 @@ for ii = 1:ncast
    BVFRQ = sw_bfrq(Xout.sa(:,ii),Xout.te(:,ii),Xout.pr(:,ii),Xout.lat(ii));
    Xout.bvfrq(:,ii) = [NaN; BVFRQ];
    CTD.bvfrq(indx) = Xout.bvfrq(1:nz,ii);   % plug into CTD struct
+
+   %KL 4/10/2025 addition: filter the BV data using Ruth's get_bvfilt.m
+   Xout.bvfilt(:,ii) = get_bvfilt([NaN; BVFRQ],5);
+   CTD.bvfilt(indx) = Xout.bvfilt(1:nz,ii);    
    
    clear itop indx nz BVFRQ
 end %for ii
