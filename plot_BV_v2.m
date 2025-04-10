@@ -22,8 +22,12 @@ T.N_squared(k) = small;
 k = find(allData.bvfrq<0);
 allData.bvfrq(k) = small;
 
+k = find(allData.bvfilt<0);
+allData.bvfilt(k) = small;
+
+
 figure
-subplot(211)
+subplot(311)
 
 x = allData.decy;
 y = allData.Depth; 
@@ -50,11 +54,39 @@ title('BV frequency calculated from all BATS data using 2db resolution CTD cast 
 h = colorbar();
 
 
+%%% plot the filtered BV data (add 4/10/2025
+subplot(312)
+
+x = allData.decy;
+y = allData.Depth; 
+% z = allData.bvfrq;
+z = power(log10(allData.bvfilt),10);
+
+k = find(y==-999);
+y(k) = [];
+x(k) =[];
+z(k)= [];
+
+k = find(z==-999);
+y(k) = [];
+x(k) =[];
+z(k)= [];
+
+forMax = max(z);
+useC = [min(z) forMax]; 
+doPlot(x,y,z,useC)
+
+xlabel('time')
+ylabel('depth (m)')
+title('BV frequency calculated from all BATS data using 2db resolution CTD cast data, FILTERED')
+h = colorbar();
+
+
 %%plot up Craig's data
 %%plot up Craig's data
 %%plot up Craig's data
 %%plot up Craig's data
-subplot(212)
+subplot(313)
 
 x = T.decy;
 y = T.Depth_m_; 
@@ -125,7 +157,7 @@ function doPlot(x,y,z,useC)
 %     colorbar
     %hold on
     %plot(x,y,'.','color',0.5*ones(1,3)) %turn off the dots
-    set(gcf,'position',[-1405 19 1308 1048])
+    set(gcf,'position',[-1070 33 844 1081])
     
 end
 
