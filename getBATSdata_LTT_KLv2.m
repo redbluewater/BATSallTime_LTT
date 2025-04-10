@@ -104,13 +104,14 @@ dirlist = dir('*.mat');
 %use the first file to set the stage
 load(dirlist(1).name)
 %Only keeping the upper water column bc that is the focus of this paper.
-%Delete depths more than 220m.
-k = find(TTcast.Depth<225);
+%Delete depths more than 260m.
+maxDepth = 260;
+k = find(TTcast.Depth < maxDepth);
 allData = TTcast(k,:);
 clear TTcast
 for a = 2:length(dirlist)
     load(dirlist(a).name);
-    k = find(TTcast.Depth<225); %only keep upper water column
+    k = find(TTcast.Depth < maxDepth); %only keep upper water column
     allData = [allData ; TTcast(k,:)];
     clear TTcast
 end

@@ -5,27 +5,32 @@
 clear all
 close all
 
-load('BATSdataForBVplots.2025.04.04.mat');
-%need cruise to compare with Craig's calculation
-for a = 1:size(allData,1)
-    if rem(a,50000)==1 
-        fprintf('iteration %d for %d peaks\n',a,size(allData,1)) 
+load workingBV.mat
+
+if 0 % COMMENT this out if I already have the pieces I need...
+    load('BATSdataForBVplots.2025.04.04.mat');
+    %need cruise to compare with Craig's calculation
+    for a = 1:size(allData,1)
+        if rem(a,50000)==1 
+            fprintf('iteration %d for %d peaks\n',a,size(allData,1)) 
+        end
+    
+        one = char(string(allData.BATS_id(a)));
+        cruise5(a,1) = {one(1:5)}; %do this, rewriting the table is slow!
+        clear one
     end
-
-    one = char(string(allData.BATS_id(a)));
-    cruise5(a,1) = {one(1:5)}; %do this, rewriting the table is slow!
-    clear one
+    clear a
+    allData.depth_rounded = round(allData.Depth);
+    
+    k = find(allData.bvfrq==-999);
+    allData.bvfrq(k) = NaN;
+    clear k
+    
+    k = find(allData.bvfilt==-999);
+    allData.bvfilt(k) = NaN;
+    clear k
 end
-clear a
-allData.depth_rounded = round(allData.Depth);
 
-k = find(allData.bvfrq==-999);
-allData.bvfrq(k) = NaN;
-clear k
-
-k = find(allData.bvfilt==-999);
-allData.bvfilt(k) = NaN;
-clear k
 
 T = readtable('Brunt-V_is_l__Frequency_Data_2.xlsx'); %this is Craig's file
 
@@ -41,6 +46,11 @@ k = find(allData.bvfilt<0);
 allData.bvfilt(k) = small;
 clear k
 
+%find requires exact depth match, use interp1 to get closest match
+%vq = interp1(v,xq);
+% vq = interp1(allData.Depth,T.Depth_m_,'nearest');
+% T.test = vq;
+
 for a = 1:size(T,1)
     if rem(a,1000)==1 
         fprintf('iteration %d for %d peaks\n',a,size(T,1)) 
@@ -54,13 +64,13 @@ for a = 1:size(T,1)
    clear one r
 
    s = strcmp(T.cruise(a),cruise5);
-   ks = find(s==1 & T.Depth_m_(a)==allData.depth_rounded);
-
+   %ks = find(s==1 & T.Depth_m_(a)==allData.depth_rounded); %was
+   ks = find(s==1 & (T.Depth_m_(a) > allData.Depth*0.8 & T.Depth_m_(a) < allData.Depth*1.2));
+     
    if ~isempty(ks)
-        %From Ruth (4/9/2025, change to this);
-        T.BV_KL_count(a) = length(ks);
-        %T.BV_KL(a) = power(nansum(log10(allData.bvfrq(ks)))./length(ks),10);
         T.BV_KL(a) = power(nansum(log10(allData.bvfilt(ks)))./length(ks),10);
+   else
+       T.BV_KL(a) = NaN;
    end
    clear s ks
 end
@@ -70,16 +80,24 @@ clear a
 % gscatter(T.BV_KL, T.BV_CC, T.BV_KL_count,[],[],20)
 plot(T.BV_KL, T.BV_CC,'.')
 hold on
-% YL = ylim;
-% line(xlim,xlim,'color','k')
-% ylim(YL)
 xlabel('BV from KL, filtered with Ruth''s code')
 ylabel('BV from Craig')
 title('Values at 10^2^0 are negative BV (unstable, converted to fixed value)')
 set(gca,'yscale','log')
 set(gca,'xscale','log')
 
+figure
+colordots2([T.BV_KL, T.BV_CC,T.Depth_m_],20,1,'parula')
+xlabel('BV from KL, filtered with Ruth''s code')
+ylabel('BV from Craig')
+title('Values at 10^2^0 are negative BV (unstable, converted to fixed value)')
+set(gca,'yscale','log')
+set(gca,'xscale','log')
+set(gcf,'position',[-994 275 897 624])
 saveas(gcf,'BATS_bvfrq_cfKLandCC.jpg')
+
+save('workingBV.mat')
+
 
 
    % 
