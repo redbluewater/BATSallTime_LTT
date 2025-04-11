@@ -275,6 +275,13 @@ for ii = 1:ncast
    CTD.bvfrq(indx) = Xout.bvfrq(1:nz,ii);   % plug into CTD struct
 
    %KL 4/10/2025 addition: filter the BV data using Ruth's get_bvfilt.m
+   %Per Ruth's suggestion, change the negative values to a small positive
+   %value BEFORE filtering the BV data (add this 4/11/2025)
+   small = 10^-100;
+   k = find(BVFRQ<0);
+   BVFRQ(k) = small;
+   clear k
+
    Xout.bvfilt(:,ii) = get_bvfilt([NaN; BVFRQ],5);
    CTD.bvfilt(indx) = Xout.bvfilt(1:nz,ii);    
 
