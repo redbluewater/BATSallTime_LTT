@@ -112,6 +112,7 @@ CTD.sig_theta = sw_pden(CTD.Salt,CTD.Temp,CTD.Pressure,0) - 1000;
 CTD.AOU = aou(CTD.Salt,CTD.Temp,CTD.O2);
 CTD.bvfrq = ZZ;
 CTD.bvfilt = ZZ; %KL added 4/10/2025
+CTD.vort = ZZ; %KL added 4/11/2025
 CTD.Sunrise = ZZ;
 CTD.Sunset = ZZ;
 CTD.Season = ZZ;
@@ -268,15 +269,20 @@ for ii = 1:ncast
        CTD.sig_theta(indx) = Xout.sig0(1:nz,ii);
    end
    
-   BVFRQ = sw_bfrq(Xout.sa(:,ii),Xout.te(:,ii),Xout.pr(:,ii),Xout.lat(ii));
+   %change to also export potential vorticity (VORT)
+   [BVFRQ,VORT,~] = sw_bfrq(Xout.sa(:,ii),Xout.te(:,ii),Xout.pr(:,ii),Xout.lat(ii));
    Xout.bvfrq(:,ii) = [NaN; BVFRQ];
    CTD.bvfrq(indx) = Xout.bvfrq(1:nz,ii);   % plug into CTD struct
 
    %KL 4/10/2025 addition: filter the BV data using Ruth's get_bvfilt.m
    Xout.bvfilt(:,ii) = get_bvfilt([NaN; BVFRQ],5);
    CTD.bvfilt(indx) = Xout.bvfilt(1:nz,ii);    
-   
-   clear itop indx nz BVFRQ
+
+   %KL 4/11/2025 addition: calculation potential vorticity
+   Xout.vort(:,ii) = [NaN; VORT];
+   CTD.vort(indx) = Xout.vort(1:nz,ii);   % plug into CTD struct
+
+   clear itop indx nz BVFRQ VORT
 end %for ii
 
 %%  loop through each cast again, add some more info, and write to individual files

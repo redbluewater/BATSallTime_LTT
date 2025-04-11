@@ -27,35 +27,8 @@ allData.bvfilt(k) = small;
 
 
 figure
-subplot(311)
-
-x = allData.decy;
-y = allData.Depth; 
-% z = allData.bvfrq;
-z = power(log10(allData.bvfrq),10);
-
-k = find(y==-999);
-y(k) = [];
-x(k) =[];
-z(k)= [];
-
-k = find(z==-999);
-y(k) = [];
-x(k) =[];
-z(k)= [];
-
-forMax = max(z);
-useC = [min(z) forMax]; 
-doPlot(x,y,z,useC)
-
-xlabel('time')
-ylabel('depth (m)')
-title('BV frequency calculated from all BATS data using 2db resolution CTD cast data')
-h = colorbar();
-
-
 %%% plot the filtered BV data (add 4/10/2025
-subplot(312)
+subplot(211)
 
 x = allData.decy;
 y = allData.Depth; 
@@ -72,7 +45,8 @@ y(k) = [];
 x(k) =[];
 z(k)= [];
 
-forMax = max(z);
+% forMax = max(z);
+forMax = 1e7;
 useC = [min(z) forMax]; 
 doPlot(x,y,z,useC)
 
@@ -86,7 +60,7 @@ h = colorbar();
 %%plot up Craig's data
 %%plot up Craig's data
 %%plot up Craig's data
-subplot(313)
+subplot(212)
 
 x = T.decy;
 y = T.Depth_m_; 
@@ -113,6 +87,105 @@ title('Carlson BV freq')
 h = colorbar()
 
 title_up('Colors are BV as ''power(log10(BV),10)''')
+
+
+if 0
+    %saveas(gcf,char(strcat(nDir,filesep,mtabNames(a),'.jpg')),'jpg')
+    %if I don't do the first bit, I don't get vectors for Illustrator
+    set(gcf,'paperpositionmode','auto')
+    set(gcf,'renderer','Painters')
+    print(gcf,'BATS_bv_allYears.svg','-dpdf')   
+elseif 1 
+    saveas(gcf,'BATS_bvfrq_allYears.jpg')
+end
+
+% figure
+% subplot(311)
+% 
+% x = allData.decy;
+% y = allData.Depth; 
+% % z = allData.bvfrq;
+% z = power(log10(allData.bvfrq),10);
+% 
+% k = find(y==-999);
+% y(k) = [];
+% x(k) =[];
+% z(k)= [];
+% 
+% k = find(z==-999);
+% y(k) = [];
+% x(k) =[];
+% z(k)= [];
+% 
+% forMax = max(z);
+% useC = [min(z) forMax]; 
+% doPlot(x,y,z,useC)
+% 
+% xlabel('time')
+% ylabel('depth (m)')
+% title('BV frequency calculated from all BATS data using 2db resolution CTD cast data')
+% h = colorbar();
+% 
+% 
+% %%% plot the filtered BV data (add 4/10/2025
+% subplot(312)
+% 
+% x = allData.decy;
+% y = allData.Depth; 
+% % z = allData.bvfrq;
+% z = power(log10(allData.bvfilt),10);
+% 
+% k = find(y==-999);
+% y(k) = [];
+% x(k) =[];
+% z(k)= [];
+% 
+% k = find(z==-999);
+% y(k) = [];
+% x(k) =[];
+% z(k)= [];
+% 
+% forMax = max(z);
+% useC = [min(z) forMax]; 
+% doPlot(x,y,z,useC)
+% 
+% xlabel('time')
+% ylabel('depth (m)')
+% title('BV frequency calculated from all BATS data using 2db resolution CTD cast data, FILTERED')
+% h = colorbar();
+% 
+% 
+% %%plot up Craig's data
+% %%plot up Craig's data
+% %%plot up Craig's data
+% %%plot up Craig's data
+% subplot(313)
+% 
+% x = T.decy;
+% y = T.Depth_m_; 
+% % z = T.N_squared;
+% z = power(log10(T.N_squared),10);
+% 
+% k = find(y==-999);
+% y(k) = [];
+% x(k) =[];
+% z(k)= [];
+% 
+% k = find(z==-999);
+% y(k) = [];
+% x(k) =[];
+% z(k)= [];
+% 
+% forMax = max(z);
+% useC = [min(z) forMax];     
+% doPlot(x,y,z,useC)
+% 
+% xlabel('time')
+% ylabel('depth (m)')
+% title('Carlson BV freq')
+% h = colorbar()
+% 
+% title_up('Colors are BV as ''power(log10(BV),10)''')
 
 
 if 0

@@ -124,7 +124,7 @@ cd(gitdir)
 if 1
     %export this as a CSV file...that will be better to share then the MATLAB
     %file; file is big, do not put in gitdir (or setup .gitignore file)
-    writetable(allData,strcat(outdir,'BATS_CTDdata_2db.2025.04.10.csv'))
+    writetable(allData,strcat(outdir,'BATS_CTDdata_2db.2025.04.11.csv'))
 end
 
 clear outdir rootdir workdir gitdir stepOne 
